@@ -1,0 +1,17 @@
+####################################################
+#                                                  #
+#       Welcome To docker file configuration       #
+#                                                  #
+####################################################
+
+#This file for hosting our project php api we dont need that now 
+
+#Defines image php apache the webserver apache support php 
+FROM php:8.2-apache
+
+#We need to install pdo extensions to work with database
+RUN docker-php-ext-install pdo pdo_mysql
+
+
+
+
