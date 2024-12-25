@@ -1,6 +1,6 @@
 <?php 
 
-class Account {
+abstract class Account {
     protected $numero ;
     protected $libelle ;
     protected $Solde = 0 ;
@@ -13,18 +13,14 @@ class Account {
         $this->numero = $new_numero :
         throw new Exception("Account all ready has and Id");
     }
+    //numero
     public function getnumero(){
         $this->numero ;
     }
     //libelle
-    public function setlibelle($new_name){
-        $this->libelle = $new_name ;
-    }
-    public function getlibelle(){
-        $this->libelle ;
-    }
+    abstract public function setlibelle($new_name);
+    abstract public function getlibelle();
+
     //Solde
-    public function getSolde(){
-        $this->Solde ; 
-    }
+    abstract public function getSolde();
 }
