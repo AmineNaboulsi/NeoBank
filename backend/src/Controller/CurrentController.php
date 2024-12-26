@@ -16,10 +16,10 @@ class CurrentController {
         ];
         //check it exists any missing paraùetres on this list
         $missingpara = array_filter($parametres , function($par){
-            return isset($_POST[$par]);
+            return !isset($_POST[$par]);
         });
 
-        if(count($missingpara)==0){
+        if(!$missingpara){
             $Current_Account = new Current_Account(
                 $_POST['libelle'] , $_POST['limitR']
             );

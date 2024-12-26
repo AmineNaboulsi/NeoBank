@@ -24,6 +24,9 @@ abstract class Account {
     //Insert Data to database
     abstract public function SaveData(PDO $con);
 
+    //Delete Data FROM database
+    abstract public function DeleteData(PDO $con);
+
     //Solde
     abstract public function getSolde();
 }

@@ -2,6 +2,8 @@
 
 require_once __DIR__ . '../../Controller/SavingController.php';
 require_once __DIR__ . '../../Controller/CurrentController.php';
+require_once __DIR__ . '../../Controller/BusinessController.php';
+require_once __DIR__ . '../../Controller/AccountController.php';
 
 class MainRouter{
 
@@ -12,16 +14,24 @@ class MainRouter{
         $this->routes = [
             'GET' => 
             [
-                '/getAccounts' => [SavingController::class , "save"],
-                '/gettransactions' => [SavingController::class , "transation"],
+                '/getAccounts' => [AccountController::class , "getAccount"],
+                '/getTransaction' => [AccountController::class , "getTransaction"],
             ],
             'POST' => 
             [
                 '/addsavingaccount' => [SavingController::class , "save"],
                 '/addcurrentaccount' => [CurrentController::class , "save"],
-                '/addbusinessaccount' => [SavingController::class , "save"],
-
-                '/transaction' => [SavingController::class , "transation"],
+                '/addbusinessaccount' => [BusinessController::class , "save"],
+            ],
+            'DELETE' => 
+            [
+                '/delsavingaccount' => [SavingController::class , "delete"],
+                '/delcurrentaccount' => [CurrentController::class , "delete"],
+                '/delbusinessaccount' => [BusinessController::class , "delete"],
+            ],
+            'PATCH' => 
+            [
+                '/transaction' => [AccountController::class , "Transaction"],
             ]
         ];
     }

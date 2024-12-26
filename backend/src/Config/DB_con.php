@@ -34,14 +34,15 @@ class DB_con {
         }
     }
     //Hand made SELECT QUERY
-    public function SELECT(array|string $columns, $table ,bool|null $isJoin ,string|null $jointable){
+    public function SELECT(array|string $columns, $table ,string|null $Where ,string|null $jointable){
         try{
             if(!$this->ConnectionStatus())
                 $this->OpenConnection();
 
             $query = "SELECT ";
             $query .= ( gettype($columns) =="string" ) ? $columns:  join(",",$columns) ;
-            $query .= " FROM ".$table .($isJoin!=null && " NATURAL JOIN $jointable");
+            $query .= " FROM ".$table .($jointable!=null && " NATURAL JOIN $jointable");
+            $Where && $query .= " WHERE  ".$Where;
             // echo $query;
             $SQLDATAREADER = $this->con->prepare(
                 $query 
@@ -64,13 +65,8 @@ class DB_con {
             if(!$this->ConnectionStatus())
                 $this->OpenConnection();
 
-            $New_Account->SaveData($this->con);
-
-            // $query .= ($New_Account instanceof Saving_Account) &&
-            // "AddCurrentAccount($New_Account->A,$New_Account->A,$New_Account->A,$New_Account->A)";
-            // $query .= ($New_Account instanceof Saving_Account) && 
-            // "AddBusinessAccount($New_Account->A,$New_Account->A,$New_Account->A,$New_Account->A)";
-
+            return $New_Account->SaveData($this->con);
+            
         }catch(Exception $e){
             return [
                 'status' => false ,

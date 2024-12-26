@@ -4,11 +4,10 @@
  use bankdb ;
 
 
-
 --Table Account
 CREATE TABLE Account(
     Numero INT AUTO_INCREMENT ,
-    Owner VARCHAR(150),
+    Owner VARCHAR(150) UNIQUE,
     Solde DECIMAL,
     primary key (Numero)
 );
@@ -39,7 +38,6 @@ CREATE TABLE BusinessAccount(
     PRIMARY key (Numero),
     Foreign Key (Numero) REFERENCES Account(Numero) ON DELETE CASCADE
 );
-
 
 --Table Transaction
 create TABLE Transaction(

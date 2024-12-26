@@ -24,7 +24,7 @@ class Current_Account extends Account{
         return $this->Solde ; 
     }
 
-  
+    //Save Account to db
     public function SaveData(PDO $con){
         $query = "CALL AddCurrentAccount(:Owner, :Solde,:limitR);";
         $SqlDataReader = $con->prepare($query);
@@ -35,9 +35,12 @@ class Current_Account extends Account{
         ]);
             return [
                 'status' => true ,
-                'message' => "Done operation"
+                'message' => "Account Added Successfuly"
             ];
         return  ;
+    }
+    public function DeleteData(PDO $con){
+       
     }
     public function __toString()
     {
