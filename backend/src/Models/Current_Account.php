@@ -1,10 +1,10 @@
 <?php 
 
-class CurrentAccount extends Account{
+class Current_Account extends Account{
 
     public $limitR ;
 
-    public function __construct($libelle , $limitR )
+    public function __construct($libelle , $limitR)
     {
         parent::__construct($libelle);
         $this->limitR = $limitR ;
@@ -24,6 +24,21 @@ class CurrentAccount extends Account{
         return $this->Solde ; 
     }
 
+  
+    public function SaveData(PDO $con){
+        $query = "CALL AddCurrentAccount(:Owner, :Solde,:limitR);";
+        $SqlDataReader = $con->prepare($query);
+        $SqlDataReader->execute([
+                ":Owner" => $this->libelle ,
+                ":Solde" => $this->Solde ,
+                ":limitR" => $this->limitR
+        ]);
+            return [
+                'status' => true ,
+                'message' => "Done operation"
+            ];
+        return  ;
+    }
     public function __toString()
     {
         return "

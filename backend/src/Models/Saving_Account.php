@@ -27,6 +27,21 @@ class Saving_Account extends Account{
         return $this->Solde ; 
     }
 
+    public function SaveData(PDO $con){
+        $query = "CALL AddSavingAccount(:Owner, :Solde,:Interest_Rate);";
+        $SqlDataReader = $con->prepare($query);
+        $SqlDataReader->execute([
+                ":Owner" => $this->libelle ,
+                ":Solde" => $this->Solde,
+                ":Interest_Rate" => $this->Interest_Rate 
+        ]);
+            return [
+                'status' => true ,
+                'message' => "Done operation"
+            ];
+        return  ;
+    }
+
     public function __toString()
     {
         return "

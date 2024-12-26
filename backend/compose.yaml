@@ -11,5 +11,15 @@ services:
       - "3304:3306"
     volumes:
       - my-db:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin_container
+    restart: always
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: root_password
+    ports:
+      - "8088:80"
+
 volumes:
   my-db:

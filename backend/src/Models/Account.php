@@ -21,6 +21,9 @@ abstract class Account {
     abstract public function setlibelle($new_name);
     abstract public function getlibelle();
 
+    //Insert Data to database
+    abstract public function SaveData(PDO $con);
+
     //Solde
     abstract public function getSolde();
 }

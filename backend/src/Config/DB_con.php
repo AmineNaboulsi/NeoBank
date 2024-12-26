@@ -59,32 +59,47 @@ class DB_con {
         }
     } 
     //Hand made SELECT QUERY
-    public function Save(Saving_Account|null $New_Account){
+    public function Save($New_Account){
         try{
             if(!$this->ConnectionStatus())
                 $this->OpenConnection();
-            $Owner = $New_Account->getlibelle();
-            $Solde = $New_Account->getSolde();
-            $query = "";
-            if($New_Account instanceof Saving_Account){
-                $query = "CALL AddSavingAccount(:Owner, :Solde,:Minimum_Solde,:Interest_Rate);";
-            }
-            $SqlDataReader = $this->con->prepare($query);
-            $SqlDataReader->execute([
-                ":Owner" => $Owner ,
-                ":Solde" => $Solde ,
-                ":Minimum_Solde" => $New_Account->Minimum_Solde ,
-                ":Interest_Rate" => $New_Account->Interest_Rate ,
-            ]);
+
+            $New_Account->SaveData($this->con);
+
             // $query .= ($New_Account instanceof Saving_Account) &&
             // "AddCurrentAccount($New_Account->A,$New_Account->A,$New_Account->A,$New_Account->A)";
             // $query .= ($New_Account instanceof Saving_Account) && 
             // "AddBusinessAccount($New_Account->A,$New_Account->A,$New_Account->A,$New_Account->A)";
 
+        }catch(Exception $e){
             return [
-                'status' => true ,
-                'message' => "Done operation"
+                'status' => false ,
+                'message' => $e->getMessage()
             ];
+        }
+    }
+    public function Transaction($Sender , $To , $amount ){
+        try{
+            if(!$this->ConnectionStatus())
+                $this->OpenConnection();
+
+            $status = 0 ;
+            $msg = "";
+            $query = "CALL TRANSACTIONMoney(:from,:to,:amount, @status, @msg);";
+            $SqlDataReader = $this->con->prepare($query);
+            $SqlDataReader->execute([
+                ":from" => $Sender ,
+                ":to" => $To,
+                ":amount" => $amount
+            ]);
+          
+            $result = $this->con->query("SELECT @status as status, @msg as msg")->fetch(PDO::FETCH_ASSOC);
+        
+            return [
+                'status' => (bool)$result['status'],
+                'message' => $result['msg']
+            ];
+           
         }catch(Exception $e){
             return [
                 'status' => false ,
