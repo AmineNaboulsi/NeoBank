@@ -23,6 +23,10 @@ class MainRouter{
                 '/addcurrentaccount' => [CurrentController::class , "save"],
                 '/addbusinessaccount' => [BusinessController::class , "save"],
             ],
+            'PUT' => 
+            [
+                '/deposit' => [AccountController::class , "depo"],
+            ],
             'DELETE' => 
             [
                 '/delsavingaccount' => [SavingController::class , "delete"],

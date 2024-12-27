@@ -1,6 +1,7 @@
 <?php 
+require_once __DIR__ . '../../Interface/AccountOperation.php';
 
-class Current_Account extends Account{
+class Current_Account extends Account implements AccountOperation{
 
     public $limitR ;
 
@@ -42,6 +43,11 @@ class Current_Account extends Account{
     public function DeleteData(PDO $con){
        
     }
+
+    public function DepositAcc(PDO $con){
+
+    }
+
     public function __toString()
     {
         return "

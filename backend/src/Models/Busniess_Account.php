@@ -1,7 +1,8 @@
 <?php 
 require_once __DIR__ . '../../Models/Account.php' ;
-
-class Business_Account extends Account{
+require_once __DIR__ . '../../Interface/AccountOperation.php';
+    
+class Business_Account extends Account implements AccountOperation{
     
     public $fee ; 
 
@@ -41,6 +42,11 @@ class Business_Account extends Account{
     public function DeleteData(PDO $con){
        
     }
+
+    public function DepositAcc(PDO $con){
+
+    }
+
     public function __toString()
     {
         return "

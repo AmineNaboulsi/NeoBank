@@ -26,7 +26,7 @@ abstract class Account {
 
     //Delete Data FROM database
     abstract public function DeleteData(PDO $con);
-
+    
     //Solde
     abstract public function getSolde();
 }

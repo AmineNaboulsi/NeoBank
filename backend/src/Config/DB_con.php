@@ -12,6 +12,12 @@ class DB_con {
     private $USER ;
     private $PASSWORD ;
     private $PORT ;
+
+    //get con
+    public function getPDOCon(){
+        return $this->con;
+    }
+
     //Constructor Default Only to get Env Variables
     public function __construct()
     {
@@ -44,13 +50,14 @@ class DB_con {
             $query .= " FROM ".$table .($jointable!=null && " NATURAL JOIN $jointable");
             $Where && $query .= " WHERE  ".$Where;
             // echo $query;
-            $SQLDATAREADER = $this->con->prepare(
+            $SQLDATAREADER = $this->con->query(
                 $query 
             );
             $SQLDATAREADER->execute();
             // $Resultat = $SQLDATAREADER->get_result();
-            $Resultat = $SQLDATAREADER->fetchAll();
-            
+            $Data= [];
+            $Resultat = $SQLDATAREADER->fetchAll(PDO::FETCH_ASSOC);
+            // print_r($Resultat);
             return $Resultat;
         }catch(Exception $e){
             return [
@@ -78,9 +85,7 @@ class DB_con {
         try{
             if(!$this->ConnectionStatus())
                 $this->OpenConnection();
-
-            $status = 0 ;
-            $msg = "";
+            
             $query = "CALL TRANSACTIONMoney(:from,:to,:amount, @status, @msg);";
             $SqlDataReader = $this->con->prepare($query);
             $SqlDataReader->execute([
@@ -90,7 +95,7 @@ class DB_con {
             ]);
           
             $result = $this->con->query("SELECT @status as status, @msg as msg")->fetch(PDO::FETCH_ASSOC);
-        
+            
             return [
                 'status' => (bool)$result['status'],
                 'message' => $result['msg']

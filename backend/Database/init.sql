@@ -4,17 +4,22 @@
  use bankdb ;
 
 
+
 --Table Account
 CREATE TABLE Account(
     Numero INT AUTO_INCREMENT ,
     Owner VARCHAR(150) UNIQUE,
     Solde DECIMAL,
+    Active INT,
     primary key (Numero)
 );
-
 INSERT INTO `Account` (Owner , Solde ) VALUES (
         "MainBankAccount" , 14000
 );
+
+
+CALL getAccounts(1,3);
+
 --Table SavingAccount
 CREATE TABLE SavingAccount(
     Numero INT AUTO_INCREMENT ,
@@ -48,12 +53,12 @@ create TABLE Transaction(
     DateTransaction Date NOT NULL,
     Status INT NOT NULL,
     PRIMARY key (NumeroT),
-    Foreign Key (NumeroSender) REFERENCES Account(Numero),
-    Foreign Key (NumeroReceiver) REFERENCES Account(Numero)
+    Foreign Key (NumeroSender) REFERENCES Account(Numero)  ON DELETE SET NULL,
+    Foreign Key (NumeroReceiver) REFERENCES Account(Numero)  ON DELETE SET NULL
 );
 
 -- AddSavingAccount Procedure
-CREATE DEFINER=`bankdb`@`%` PROCEDURE `AddSavingAccount`(
+CREATE PROCEDURE `AddSavingAccount`(
     IN p_Owner VARCHAR(150) ,
     IN p_Solde DECIMAL ,
     IN p_Interest_Rate DECIMAL 
@@ -97,6 +102,28 @@ BEGIN
         IdAccount , p_limitR 
     );
 END
+
+CREATE DEFINER=`bankdb`@`%` PROCEDURE `AddBusinessAccount`(
+    IN p_Owner VARCHAR(150) ,
+    IN p_Solde DECIMAL ,
+    IN p_fee DECIMAL 
+)
+BEGIN
+    -- GET Id Accoutn after inserting 
+    DECLARE IdAccount INT;
+
+    INSERT INTO `Account` (Owner , Solde ) VALUES (
+        p_Owner , p_Solde
+    );
+
+    -- GET last Id inserted
+    SET IdAccount = LAST_INSERT_ID();
+
+    INSERT INTO `BusinessAccount` (Numero  , `FeeT` ) VALUES (
+        IdAccount  , p_fee
+    );
+END
+
 
 DELIMITER //
 CREATE PROCEDURE TRANSACTIONMoney(
@@ -177,4 +204,19 @@ BEGIN
         );
     END IF;
 END //
+
+CREATE PROCEDURE `getAccounts`(
+)
+BEGIN
+    -- GET Id Accoutn after inserting 
+    select "Business Account" as type , a.*  from `BusinessAccount` 
+    NATURAL JOIN `Account` a
+    UNION 
+    select "Current Account" as type , a.*   from `CurrentAccount` 
+    NATURAL JOIN `Account` a
+    UNION 
+    select "Saving Account" as type  , a.*   from `SavingAccount`  
+    NATURAL JOIN `Account` a;
+
+END
 

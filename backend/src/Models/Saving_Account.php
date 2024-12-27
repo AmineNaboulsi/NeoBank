@@ -1,7 +1,8 @@
 <?php 
 require_once __DIR__ . '../../Models/Account.php' ;
+require_once __DIR__ . '../../Interface/AccountOperation.php';
 
-class Saving_Account extends Account{
+class Saving_Account extends Account implements AccountOperation{
     
     public $Minimum_Solde ; 
     public $Interest_Rate ; 
@@ -44,6 +45,12 @@ class Saving_Account extends Account{
     public function DeleteData(PDO $con){
        
     }
+    
+    public function DepositAcc(PDO $con){
+        
+    }
+
+
     public function __toString()
     {
         return "
