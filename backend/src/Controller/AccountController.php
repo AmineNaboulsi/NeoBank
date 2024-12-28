@@ -24,7 +24,7 @@ class AccountController {
     
             $SQlDATAREADER->execute([
                 ":from" => $_GET["from"],
-                ":from" => $_GET["to"]
+                ":to" => $_GET["to"]
     
             ]);
             $rowscount = $SQlDATAREADER->rowCount();
