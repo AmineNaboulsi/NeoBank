@@ -1,7 +1,7 @@
 import {useAppSelector} from '../../Redux/hooks'
 import {RootState} from '../../Redux/store'
 function StepAccType() {
-  const AccountInfo = useAppSelector((state: RootState)=>state.Account)
+  const AccountInfo = useAppSelector((state: RootState)=>state.accountinfo)
   
   return (
     <div className="m-3.5 border border-gray-500 rounded-md">

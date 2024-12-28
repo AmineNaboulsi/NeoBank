@@ -15,7 +15,7 @@ const initialState :AccountType = {
 }
 
 const account_slice = createSlice({
-name : "Account" ,
+name : "accountinfo" ,
 initialState ,
 reducers :{
     userinfovalidation: (state , action: PayloadAction<{owner?: string , email?: string}>) =>{
