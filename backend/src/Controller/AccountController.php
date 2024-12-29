@@ -1,6 +1,9 @@
 <?php
 require_once __DIR__ .'../../Config/DB_con.php';
 require_once __DIR__ .'../../Models/Busniess_Account.php';
+require_once __DIR__ .'../../Models/Account.php';
+require_once __DIR__ .'../../Models/Current_Account.php';
+require_once __DIR__ .'../../Models/Saving_Account.php';
 
 class AccountController {
     private $DB_con ;
@@ -29,7 +32,6 @@ class AccountController {
             $id = $_GET["id"];
             $this->DB_con->OpenConnection();
             $Resultat =$this->DB_con->SELECT(["*"] , 'Transaction' , "NumeroSender = $id" , null);
-            print_r($Resultat);
             return $Resultat;
         }else{
             return [
@@ -46,10 +48,30 @@ class AccountController {
         $missingpara = array_filter($parametres , function($par){
             return !isset($_GET[$par]);
         });
+
         if(!$missingpara){
             $this->DB_con->OpenConnection();
-            return $this->DB_con->Transaction(
+
+            $SQLDATAREADER = $this->DB_con->getPDOCon()->prepare("CALL getAccountType(:numero);");
+
+            $SQLDATAREADER->execute([
+                ':numero' => $_GET['sender']
+            ]);
+ 
+            $result = $SQLDATAREADER->fetch(PDO::FETCH_ASSOC);
+
+            // Display the account type
+            if ($result) {
+                $AccountObject = null;
+                if($result['AccountType'] == "ba") $AccountObject = new Business_Account('','');
+                if($result['AccountType'] == "ca") $AccountObject = new Current_Account('','');
+                if($result['AccountType'] == "sa") $AccountObject = new Saving_Account('','','');
+                $con = new DB_con();
+                $con->OpenConnection();
+                return $AccountObject->Transaction($con->getPDOCon(),
                 $_GET["sender"], $_GET["to"] , $_GET["amount"]) ;
+            } 
+           
         }else{
             return [
                 'status' => false ,
@@ -95,6 +117,10 @@ class AccountController {
             ];
         }
     }
+    public function withdraw(){
+        echo 'cdpnz';
+    }
+
 }
 
 ?>

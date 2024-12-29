@@ -26,6 +26,7 @@ class MainRouter{
             'PUT' => 
             [
                 '/deposit' => [AccountController::class , "depo"],
+                '/retirer' => [AccountController::class , "withdraw"],
             ],
             'DELETE' => 
             [

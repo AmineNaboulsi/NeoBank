@@ -69,10 +69,30 @@ class DB_con {
     //Hand made SELECT QUERY
     public function Save($New_Account){
         try{
-            if(!$this->ConnectionStatus())
-                $this->OpenConnection();
+            $this->OpenConnection();
 
-            return $New_Account->SaveData($this->con);
+            $parametres = [
+                "libelle" , "email"
+            ];
+            $missingpara = array_filter($parametres , function($par){
+                return !isset($_POST[$par]);
+            });
+            if(!$missingpara){
+                $etatValidation = $New_Account->CheckInfoValidation($_POST['libelle'] , $_POST['email']);
+                if($etatValidation==0){
+                    return $New_Account->SaveData($this->con);
+                }else{
+                    return [
+                        'status' => false ,
+                        'message' => "Name or email all ready used"
+                    ];
+                }
+            }else{
+                return [
+                    'status' => false ,
+                    'message' => "Missing parametres"
+                ];
+            }
             
         }catch(Exception $e){
             return [
@@ -81,33 +101,7 @@ class DB_con {
             ];
         }
     }
-    public function Transaction($Sender , $To , $amount ){
-        try{
-            if(!$this->ConnectionStatus())
-                $this->OpenConnection();
-            
-            $query = "CALL TRANSACTIONMoney(:from,:to,:amount, @status, @msg);";
-            $SqlDataReader = $this->con->prepare($query);
-            $SqlDataReader->execute([
-                ":from" => $Sender ,
-                ":to" => $To,
-                ":amount" => $amount
-            ]);
-          
-            $result = $this->con->query("SELECT @status as status, @msg as msg")->fetch(PDO::FETCH_ASSOC);
-            
-            return [
-                'status' => (bool)$result['status'],
-                'message' => $result['msg']
-            ];
-           
-        }catch(Exception $e){
-            return [
-                'status' => false ,
-                'message' => $e->getMessage()
-            ];
-        }
-    }
+
     //Check Connection Status 
     public function ConnectionStatus(){
         return $this->con;

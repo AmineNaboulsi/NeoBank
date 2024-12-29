@@ -42,7 +42,31 @@ class Business_Account extends Account implements AccountOperation{
     public function DeleteData(PDO $con){
        
     }
+    public function Transaction(PDO $con ,$Sender , $To , $amount ){
+        try{
 
+            $query = "CALL TRANSACTIONMoney(:from,:to,:amount, @status, @msg);";
+            $SqlDataReader = $con->prepare($query);
+            $SqlDataReader->execute([
+                ":from" => $Sender ,
+                ":to" => $To,
+                ":amount" => $amount
+            ]);
+          
+            $result = $con->query("SELECT @status as status, @msg as msg")->fetch(PDO::FETCH_ASSOC);
+            
+            return [
+                'status' => (bool)$result['status'],
+                'message' => $result['msg']
+            ];
+           
+        }catch(Exception $e){
+            return [
+                'status' => false ,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
     public function DepositAcc(PDO $con){
 
     }

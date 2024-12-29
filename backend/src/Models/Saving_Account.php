@@ -27,7 +27,12 @@ class Saving_Account extends Account implements AccountOperation{
     public function getSolde(){
         return $this->Solde ; 
     }
-
+    public function Transaction(PDO $con ,$Sender , $To , $amount ){
+        return [
+            'status' => false ,
+            'message' => "Saving account dont allows to make transactions"
+        ];
+    }
     public function SaveData(PDO $con){
         $query = "CALL AddSavingAccount(:Owner, :Solde,:Interest_Rate);";
         $SqlDataReader = $con->prepare($query);

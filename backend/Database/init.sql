@@ -222,3 +222,23 @@ BEGIN
 
 END
 
+
+CREATE PROCEDURE getAccountType(
+    IN NUMERO_ INT
+)
+BEGIN
+SELECT 
+    CASE 
+        WHEN b.Numero IS NOT NULL THEN 'ba'
+        WHEN c.Numero IS NOT NULL THEN 'ca'
+        WHEN s.Numero IS NOT NULL THEN 'sa'
+    END AS AccountType
+    FROM Account a
+    LEFT JOIN BusinessAccount b ON a.Numero = b.Numero
+    LEFT JOIN CurrentAccount c ON a.Numero = c.Numero
+    LEFT JOIN SavingAccount s ON a.Numero = s.Numero
+    WHERE a.Numero = NUMERO_;
+    
+END;
+
+
