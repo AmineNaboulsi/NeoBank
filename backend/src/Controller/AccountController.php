@@ -10,37 +10,18 @@ class AccountController {
         $this->DB_con = new DB_con();
     }
     public function getAccount(){
-        $parametres = [
-            "from" , "to"
-        ];
-        //check it exists any missing paraùetres on this list
-        $missingpara = array_filter($parametres , function($par){
-            return !isset($_GET[$par]);
-        });
-        if(!$missingpara){
-            $this->DB_con->OpenConnection();
+        $this->DB_con->OpenConnection();
           
-            $SQlDATAREADER = $this->DB_con->getPDOCon()->prepare("CALL getAccounts(:from,:to);");
-    
-            $SQlDATAREADER->execute([
-                ":from" => $_GET["from"],
-                ":to" => $_GET["to"]
-    
-            ]);
-            $rowscount = $SQlDATAREADER->rowCount();
-            $Resultat = $SQlDATAREADER->fetchAll(PDO::FETCH_ASSOC);
-            
-            return [
-                "count" => $rowscount,
-                "accounts" => $Resultat
-            ];
-        }else{
-            return [
-                'status' => false ,
-                'message' => "Missing parametres"
-            ];
-        }
+        $SQlDATAREADER = $this->DB_con->getPDOCon()->prepare("CALL getAccounts();");
+
+        $SQlDATAREADER->execute();
+        $rowscount = $SQlDATAREADER->rowCount();
+        $Resultat = $SQlDATAREADER->fetchAll(PDO::FETCH_ASSOC);
         
+        return [
+            "count" => $rowscount,
+            "accounts" => $Resultat
+        ];
     }
     public function getTransaction(){
         if(isset($_GET["id"])){

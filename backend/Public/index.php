@@ -1,8 +1,8 @@
 <?php 
 
-require_once '../src/Config/DB_con.php';
-require_once '../src/Models/Saving_Account.php';
-require_once '../src/Routes/MainRouter.php';
+require_once __DIR__ . '../../src/Config/DB_con.php';
+require_once __DIR__ . '../../src/Models/Saving_Account.php';
+require_once __DIR__ . '../../src/Routes/MainRouter.php';
 
 header("Access-Control-Allow-Origin : *");
 header('Content-Type: application/json');

@@ -3,12 +3,13 @@
 --Use Bank
  use bankdb ;
 
-
+Alter table 
 
 --Table Account
 CREATE TABLE Account(
     Numero INT AUTO_INCREMENT ,
     Owner VARCHAR(150) UNIQUE,
+    Email VARCHAR(150) UNIQUE,
     Solde DECIMAL,
     Active INT,
     primary key (Numero)
@@ -45,10 +46,10 @@ CREATE TABLE BusinessAccount(
 );
 
 --Table Transaction
-create TABLE Transaction(
+CREATE TABLE Transaction (
     NumeroT INT AUTO_INCREMENT ,
-    NumeroSender INT NOT NULL,
-    NumeroReceiver INT NOT NULL,
+    NumeroSender INT ,
+    NumeroReceiver INT ,
     AMOUNT DECIMAL NOT NULL,
     DateTransaction Date NOT NULL,
     Status INT NOT NULL,
@@ -205,7 +206,8 @@ BEGIN
     END IF;
 END //
 
-CREATE PROCEDURE `getAccounts`(
+
+CREATE DEFINER=`bankdb`@`%` PROCEDURE `getAccounts`(
 )
 BEGIN
     -- GET Id Accoutn after inserting 
@@ -216,7 +218,7 @@ BEGIN
     NATURAL JOIN `Account` a
     UNION 
     select "Saving Account" as type  , a.*   from `SavingAccount`  
-    NATURAL JOIN `Account` a;
+    NATURAL JOIN `Account` a ;
 
 END
 
