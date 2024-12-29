@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import Header from "../Components/Header"
 import PopPupFreezAcc from "../Components/PopPupFreezAcc"
 import PopPupAddccount from "../Components/PopPupAddccount"
+import PopPupTransaction from "../Components/PopPupTransaction"
+import OpenAddDepoPanel from "../Components/PopPupDeposit"
 import { PiHandDeposit } from "react-icons/pi";
 import { GrTransaction } from "react-icons/gr";
 import { IoMdAdd } from "react-icons/io";
@@ -20,6 +22,25 @@ function Accounts() {
     const [accountsIdSelected , setaccountsIdSelected] = useState(-1);
     const [OpenFrezzAccount , setOpenFrezzAccount] = useState(false);
     const [OpenAddAccount , setOpenAddAccount] = useState(false);
+    const [OpenAddTransaction , setOpenTransaction] = useState(false);
+    const [OpenAddDepo , setOpenDepo] = useState(false);
+
+    const HandledClickFrezz = (Id:number) =>{
+        setaccountsIdSelected(Id);
+        setOpenFrezzAccount(true);
+    }
+    const handleClose = () => {
+        setOpenFrezzAccount(false);
+        setaccountsIdSelected(-1);
+        setOpenAddAccount(false);
+        setOpenTransaction(false);
+        setOpenDepo(false);
+        
+      };
+    const handleAddingBtnPanel = () => {
+        setOpenAddAccount(false);
+    };
+
     useEffect(()=>{
         const getdataAccounts = () => {
             fetch(`${import.meta.env.VITE_APP_URL}/getAccounts?from=1&to=7`)
@@ -30,17 +51,6 @@ function Accounts() {
         }
         getdataAccounts();
     },[]);
-    const HandledClickFrezz = (Id:number) =>{
-        setaccountsIdSelected(Id);
-        setOpenFrezzAccount(true);
-    }
-    const handleClose = () => {
-        setOpenFrezzAccount(false);
-        setaccountsIdSelected(-1);
-      };
-    const handleAddingBtnPanel = () => {
-        setOpenAddAccount(false);
-    };
   return (
     <>
      <Header />
@@ -56,20 +66,37 @@ function Accounts() {
             CancelAdding={handleAddingBtnPanel}
         />
      )}
-      
+      {OpenAddTransaction && (
+        <PopPupTransaction
+            ClosePop={handleClose}
+         />
+      )}
+      {OpenAddDepo && 
+      (
+        <OpenAddDepoPanel  
+            ClosePop={handleClose}
+        />
+      )}
      <div className="mx-24 my-5 grid grid-rows-[auto,1fr] gap-6 items-center max-w-screen-xl">
      <div className="flex justify-between">
         <h1 className="text-xl font-semibold">Accounts</h1>
         <div className="flex items-center gap-5">
-            <div className="flex items-center gap-3 cursor-pointer shadow hover:shadow-sm hover:shadow-green-500 bg-green-500 text-white px-3 py-1 rounded-md">
+            <div 
+                    onClick={()=>{
+                        setOpenTransaction(true);
+                }}
+         className="flex items-center gap-3 cursor-pointer shadow hover:shadow-sm hover:shadow-green-500 bg-green-500 text-white px-3 py-1 rounded-md">
                 <GrTransaction />
                 <span>Transaction</span>
             </div>
-            <div className="flex items-center gap-3 cursor-pointer shadow hover:shadow-sm hover:shadow-blue-500 bg-blue-500 text-white px-3 py-1 rounded-md">
+            <div onClick={()=>{
+                setOpenDepo(true);
+            }} 
+            className="flex items-center gap-3 cursor-pointer shadow hover:shadow-sm hover:shadow-blue-500 bg-blue-500 text-white px-3 py-1 rounded-md">
                 <PiHandDeposit />
                 <span>Deposit</span>
             </div>
-            <div className="flex items-center gap-3 cursor-pointer shadow hover:shadow-sm hover:shadow-red-500 bg-red-500 text-white px-3 py-1 rounded-md">
+            <div  className="flex items-center gap-3 cursor-pointer shadow hover:shadow-sm hover:shadow-red-500 bg-red-500 text-white px-3 py-1 rounded-md">
                 <PiHandDeposit />
                 <span>Retirer</span>
             </div>
@@ -117,7 +144,7 @@ function Accounts() {
                                     {item?.Solde}
                                     <IoIosArrowRoundUp 
                                         size={25}
-                                        className={`${item?.Solde == "0" ? "text-red-600 rotate-[180deg]" : "text-green-500 rotate-[10deg]"}`} />
+                                        className={`${item?.Solde == "0" ? "text-red-600 rotate-[180deg]" : "text-green-500 rotate-[0deg]"}`} />
                                 </div>
                                 
                             </td>
